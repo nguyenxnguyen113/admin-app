@@ -1,5 +1,5 @@
 import axios from "../helpers.js/axios";
-import { categoryConstansts } from "./constants";
+import { categoryConstansts, productConstants } from "./constants";
 export const addFilm = form => {
     return async dispatch => {
         const res = await axios.post(`product/create`, form);
@@ -10,19 +10,19 @@ export const addFilm = form => {
 export const getAllFilm = () => {
     return async (dispatch) => {
         dispatch({
-            type: categoryConstansts.GET_ALL_CATEGORIES_REQUEST,
+            type: productConstants.GET_ALL_PRODUCTS_REQUEST,
         })
-        const res = await axios.get(`category/getcategory`)
+        const res = await axios.get(`/product/getproduct`)
         console.log(res)
-        const { categories } = res.data
+        const { products } = res.data
         if (res.status === 200) {
             dispatch({
-                type: categoryConstansts.GET_ALL_CATEGORIES_SUCCESS,
-                payload: { categoryList: categories }
+                type: productConstants.GET_ALL_PRODUCTS_SUCCESS,
+                payload: { productList: products }
             })
         } else {
             dispatch({
-                type: categoryConstansts.GET_ALL_CATEGORIES_FAILURE,
+                type: productConstants.GET_ALL_PRODUCTS_FAILURE,
                 payload: {error: res.data.error}
             })
         }

@@ -1,15 +1,16 @@
 import { productConstants } from "../actions/constants";
 
 const initialState = {
-    products: []
+    productList: []
 };
 
 export default (state = initialState, action) => {
+    console.log(action)
     switch(action.type){
         case productConstants.GET_ALL_PRODUCTS_SUCCESS:
             state = {
                 ...state,
-                products: action.payload.products
+                productList: action.payload.productList
             }
             break;
     }

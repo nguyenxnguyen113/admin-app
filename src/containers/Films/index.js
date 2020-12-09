@@ -3,7 +3,7 @@ import { Container, Row, Col, Modal, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Input } from "../../components/UI/Input";
-import { getAllCategory, addFilm, getAllActor, getAllCountry } from "../../actions";
+import { getAllCategory, addFilm, getAllActor, getAllCountry, getAllFilm } from "../../actions";
 import Select from 'react-select';
 
 export const Film = (props) => {
@@ -23,7 +23,7 @@ export const Film = (props) => {
     const product = useSelector((state) => state.product);
     const actor = useSelector(state => state.actor)
     const country = useSelector((state) => state.country);
-
+    console.log(product)
     const data = category.categoryList
     const dispatch = useDispatch();
     console.log(category)
@@ -32,6 +32,7 @@ export const Film = (props) => {
         dispatch(getAllCategory())
         dispatch(getAllActor())
         dispatch(getAllCountry())
+        dispatch(getAllFilm())
     }, [])
     const handleClose = () => {
         const newFilm = {
@@ -87,18 +88,18 @@ export const Film = (props) => {
 
     const renderFilms = () => {
         return (
-            <Table style={{ fontSize: 12 }} responsive="sm">
+            <Table style={{ fontSize: 20 }} responsive="sm">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>English name</th>
-                        <th>Category</th>
+                        <th>Year of release</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {product.products.length > 0
-                        ? product.products.map((film) => (
+                    {product.productList.length > 0
+                        ? product.productList.map((film) => (
                             <tr
                                 //   onClick={() => showProductDetailsModal(product)}
                                 key={film._id}
@@ -106,7 +107,7 @@ export const Film = (props) => {
                                 <td>2</td>
                                 <td>{film.name}</td>
                                 <td>{film.ename}</td>
-                                <td>{film.category.name}</td>
+                                <td>{film.year}</td>
                             </tr>
                         ))
                         : null}
@@ -126,7 +127,7 @@ export const Film = (props) => {
                     </Col>
                 </Row>
                 <Row>
-                    {/* {renderFilms()} */}
+                    {renderFilms()}
                 </Row>
             </Container>
             <Modal show={show} onHide={handleClose}>

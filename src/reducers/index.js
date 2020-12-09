@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     category: categoryReducer,
-    film: filmReducer,
+    product: filmReducer,
     country: countryReducers,
     actor: actorReducers,
 })
