@@ -11,9 +11,7 @@ window.store = store;
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <React.StrictMode>
         <App />
-      </React.StrictMode>
     </Router>
   </Provider>,
   document.getElementById("root")

@@ -8,6 +8,7 @@ import PrivateRoute from './components/HOC/PrivateRoute'
 import { useDispatch, useSelector } from "react-redux";
 import {isUserLoggedIn} from './actions'
 import { Film } from "./containers/Films";
+import InfoFilm from './containers/Films/InfoFilm'
 import { Category } from "./containers/Categories";
 import { Actor } from "./containers/Actors";
 import { Country } from "./containers/Countries";
@@ -26,6 +27,7 @@ function App() {
         <Switch>
           <PrivateRoute path='/' exact component={Home}/>
           <PrivateRoute path='/films' exact component={Film}/>
+          <PrivateRoute path='/films/:id' component={InfoFilm}/>
           <PrivateRoute path='/categories' exact component={Category}/>
           <PrivateRoute path='/actors' exact component={Actor}/>
           <PrivateRoute path='/countries' exact component={Country}/>
