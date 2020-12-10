@@ -113,9 +113,9 @@ function AddFilm(props) {
         setLargerImg('')
         setUrl('')
         setDescription('')
-        setCategories([])
+        setCategories(["default"])
         setCountryId('')
-        setActors([])
+        setActors(["default"])
         setShow(false)
     };
 
