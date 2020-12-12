@@ -39,7 +39,11 @@ const Header = (props) => {
     );
   };
   return (
-    <div>
+    <div style={{
+      position:'fixed',
+      width:'100%',
+      zIndex:'1000'
+    }}>
       <Navbar
         collapseOnSelect
         expand="lg"

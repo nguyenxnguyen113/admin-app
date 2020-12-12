@@ -64,7 +64,7 @@ export const Film = (props) => {
                                 }}>
                                     <Image style={{
                                         width:'100%',
-                                    }} src="https://icdn.dantri.com.vn/thumb_w/640/2019/06/23/ngo-duc-son-nam-than-truong-hoc-10-1561286588938.jpg" rounded />
+                                    }} src={film.img} rounded />
                                 </td>
                                 <td  style={{
                                     width:"15%",
