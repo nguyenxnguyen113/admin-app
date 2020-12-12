@@ -1,7 +1,8 @@
 import { productConstants } from "../actions/constants";
 
 const initialState = {
-    productList: []
+    productList: [],
+    product:[]
 };
 
 export default (state = initialState, action) => {
@@ -11,6 +12,12 @@ export default (state = initialState, action) => {
             state = {
                 ...state,
                 productList: action.payload.productList
+            }
+            break;
+        case productConstants.GET_PRODUCT_BY_ID_SUCCESS:
+            state = {
+                ...state,
+                product: action.payload.product
             }
             break;
     }

@@ -18,7 +18,7 @@ export const getAllActor = () => {
         } else {
             dispatch({
                 type: actorConstants.GET_ALL_ACTORS_FAILURE,
-                payload: {error: res.data.error}
+                payload: { error: res.data.error }
             })
         }
     }
@@ -40,9 +40,34 @@ export const addActor = (form) => {
                     payload: res.data.error
                 });
             }
-        } catch (error) {   
+        } catch (error) {
             console.log(error.response);
         }
 
     }
 }
+
+export const deleteActorById = (payload) => {
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(`/actor/deleteActorById`, {
+                data: { payload },
+            });
+            dispatch({ type: actorConstants.DELETE_ACTOR_BY_ID_REQUEST });
+            if (res.status === 202) {
+                dispatch({ type: actorConstants.DELETE_ACTOR_BY_ID_SUCCESS });
+                dispatch(getAllActor());
+            } else {
+                const { error } = res.data;
+                dispatch({
+                    type: actorConstants.DELETE_ACTOR_BY_ID_FAILURE,
+                    payload: {
+                        error,
+                    },
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};

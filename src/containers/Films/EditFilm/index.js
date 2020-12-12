@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useEffect, useState } from "react";
 import { addFilm } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,14 +6,11 @@ import { Input } from "../../../components/UI/Input";
 import {storage} from '../../../firebase'
 
 
-import {  Modal, Button ,Image} from "react-bootstrap";
+import {  Modal, Button } from "react-bootstrap";
 
-function AddFilm(props) {
-    const {show ,setShow} = props
+function EditFilm(props) {
+    const {showEdit ,setShowEdit, data} = props
 
-    const [isUploadedImage,setIsUploadedImage] = useState(false) 
-    const imageUploadedRef = useRef([])
-    const [imageUrl,setImageUrl] = useState([])
     const [name, setName] = useState('')
     const [ename, setEname] = useState('')
     const [img, setImg] = useState('')
@@ -27,10 +24,11 @@ function AddFilm(props) {
     const category = useSelector((state) => state.category);
     const actor = useSelector(state => state.actor)
     const country = useSelector((state) => state.country);
-
+    const film = useSelector((state) => state.film)
+    
     const dispatch = useDispatch();
 
-
+    // Object.keys(film.product).length !== 0 ? setShowEdit(true) : setShowEdit(false)
     const createCategoryList = (categories, options = []) => {
         for (let category of categories) {
             options.push({ value: category._id, name: category.name });
@@ -43,7 +41,6 @@ function AddFilm(props) {
         }
         return options;
     };
-
     const createActorList = (actors, options = []) => {
         for (let actor of actors) {
             options.push({ value: actor._id, name: actor.name });
@@ -54,23 +51,30 @@ function AddFilm(props) {
         if(value === 'category') setCategories([...categories,"default"])
         if(value === 'actors') setActors([...actors,"default"])
     }
-    const handleUploadImg = async (e,name)=>{
-         console.log(e.target.files[0])
-         if(e.target.files[0]!==undefined){
-            imageUploadedRef.current.push({
-                name:name,
-                img:e.target.files[0]
-            })
-            e.target.files = null
-            console.log(imageUploadedRef.current);
-            imageUploadedRef.current.forEach(
-                (item) => {
-                    console.log(item);
-                    setImageUrl([...imageUrl,URL.createObjectURL(item.img)])
-                }
-            )
-        }
-       
+    const handleUploadImg = (e,name)=>{
+        console.log(e.target.name)
+        const uploadTask = storage.ref(`images/${e.target.files[0].name}`).put(e.target.files[0])
+        uploadTask.on(
+            "state_changed",
+            snapshot => {  },
+            err => {
+                console.log(err)
+            },
+            () => {
+                storage
+                    .ref("images")
+                    .child(e.target.files[0].name)
+                    .getDownloadURL()
+                    .then(url => {
+                        if(name ==='image'){
+                            setImg(url)
+                        }
+                        if(name==='largeImage'){
+                            setLargerImg(url)
+                        }
+                    })
+            }
+        )
     }
     const checkNull = ()=>{
         if(name.trim()==="") return true
@@ -85,95 +89,59 @@ function AddFilm(props) {
         if(countryId.trim() === "") return true
     }
     const handleClose = () => {
-        if (imageUploadedRef.current.length > 0) {
-            for (let i = 0; i < imageUploadedRef.current.length; i++) {
-                const uploadTask = storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
-                uploadTask.on(
-                    "state_changed",
-                    snapshot => { },
-                    err => {
-                        console.log(err)
-                    },
-                    () => {
-                        storage
-                            .ref("images")
-                            .child(imageUploadedRef.current[i].img.name)
-                            .getDownloadURL()
-                            .then(url => {
-                                if(imageUploadedRef.current[i].name==='image'){
-                                    setImg(url)
-                                }
-                                else setLargerImg(url)
-                            })
-                            .then(()=>{
-                                setTimeout(()=>{
-                                    if (i === imageUploadedRef.current.length - 1) {
-                                        setIsUploadedImage(true)
-                                        imageUploadedRef.current = []
-                                        setImageUrl([])
-                                    }
-                                },1000)
-                            })
-                    }
-                )
-            }
+        const newFilm = {
+            name: name,
+            ename: ename,
+            img: img,
+            largerImg: largerImg,
+            url: url,
+            description: description,
+            categories: categories,
+            actors: actors,
+            countries: countryId,
+            year: year
         }
+        if(checkNull()) {
+            alert('you have to enter valid Values')
+        }
+        else{
+            dispatch(addFilm(newFilm))
+        }
+        setEname('')
+        setName('')
+        setImg('')
+        setLargerImg('')
+        setUrl('')
+        setDescription('')
+        setCategories(["default"])
+        setCountryId('')
+        setActors(["default"])
+        setShowEdit(false)
     };
 
     useEffect(()=>{
-        if(isUploadedImage){
-            const newFilm = {
-                name: name,
-                ename: ename,
-                img: img,
-                largerImg: largerImg,
-                url: url,
-                description: description,
-                categories: categories,
-                actors: actors,
-                countries: countryId,
-                year: year
-            }
-            if(checkNull()) {
-                alert('you have to enter valid Values')
-            }
-            else{
-                dispatch(addFilm(newFilm))
-            }
-            setEname('')
-            setName('')
-            setImg('')
-            setLargerImg('')
-            setUrl('')
-            setDescription('')
-            setCategories(["default"])
-            setCountryId('')
-            setActors(["default"])
-            setShow(false)
-            setIsUploadedImage(false)
-        }
-    },[isUploadedImage])
+        console.log(categories);
+    },[categories])
     return (
         <div>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={showEdit} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Add New Category</Modal.Title>
+                    <Modal.Title>Edit </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Input
                         label="Name"
                         value={name}
-                        placeholder='Enter new name film'
+                        placeholder={data.name}
                         onChange={(e) => { setName(e.target.value) }}
                     />
                     <Input
                         label="English name"
                         value={ename}
-                        placeholder='Enter new english name film'
+                        placeholder={data.ename}
                         onChange={(e) => { setEname(e.target.value) }}
                     />
-                    {   
-
+                    {
                         img === '' ? <Input
                             type="file"
                             label="image"
@@ -193,30 +161,21 @@ function AddFilm(props) {
                             }}
                     /> :<p>{largerImg}</p>
                     }
-                    <div style={{
-                        display:"flex",
-                    }}>
-                        {
-                             imageUrl.length>0&&imageUrl.map((item,index)=>
-                             <Image key={index} style={{width:"100px",marginRight:'10px'}} src={item} rounded/>
-                                )
-                        }
-                    </div>
                     <Input
                         label="URL film"
                         value={url}
-                        placeholder='Enter url'
+                        placeholder={data.url}
                         onChange={(e) => { setUrl(e.target.value) }}
                     />
                     <Input
                         label="Description"
                         value={description}
-                        placeholder='Enter new description'
+                        placeholder={data.description}
                         onChange={(e) => { setDescription(e.target.value) }}
                     />
                     Year of release
                     <div>
-                        <select className="form-control" value={year} onChange={(e) => { setYear(e.target.value) }}  >
+                        <select className="form-control" value={year == "" ? data.year : year} onChange={(e) => { setYear(e.target.value) }}  >
                             <option value="default">Select Year</option>
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
@@ -286,7 +245,7 @@ function AddFilm(props) {
                                         setActors([...newArr])
                                     }}
                                 >
-                                        <option value="default">select actor</option>
+                                        <option value="default">select actors</option>
                                         {createActorList(actor.actorList).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
@@ -311,4 +270,4 @@ function AddFilm(props) {
     )
 }
 
-export default AddFilm
+export default EditFilm

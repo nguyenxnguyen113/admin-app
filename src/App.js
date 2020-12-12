@@ -28,6 +28,7 @@ function App() {
           <PrivateRoute path='/' exact component={Home}/>
           <PrivateRoute path='/films' exact component={Film}/>
           <PrivateRoute path='/films/:id' component={InfoFilm}/>
+          {/* <PrivateRoute path="/edit/:id" component={EditFilm} /> */}
           <PrivateRoute path='/categories' exact component={Category}/>
           <PrivateRoute path='/actors' exact component={Actor}/>
           <PrivateRoute path='/countries' exact component={Country}/>

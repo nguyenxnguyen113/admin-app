@@ -18,7 +18,7 @@ export const getAllCountry = () => {
         } else {
             dispatch({
                 type: countryConstansts.GET_ALL_COUNTRY_FAILURE,
-                payload: {error: res.data.error}
+                payload: { error: res.data.error }
             })
         }
     }
@@ -40,9 +40,34 @@ export const addCountry = (form) => {
                     payload: res.data.error
                 });
             }
-        } catch (error) {   
+        } catch (error) {
             console.log(error.response);
         }
 
     }
 }
+
+export const deleteCountryById = (payload) => {
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(`/country/deleteCountryById`, {
+                data: { payload },
+            });
+            dispatch({ type: countryConstansts.DELETE_COUNTRY_REQUEST });
+            if (res.status === 202) {
+                dispatch({ type: countryConstansts.DELETE_COUNTRY_SUCCESS });
+                dispatch(getAllCountry());
+            } else {
+                const { error } = res.data;
+                dispatch({
+                    type: countryConstansts.DELETE_COUNTRY_FAILURE,
+                    payload: {
+                        error,
+                    },
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
