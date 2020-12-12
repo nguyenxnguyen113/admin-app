@@ -2,9 +2,9 @@ import { Layout } from "../../components/Layout";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getAllCountry, addCountry } from "../../actions";
+import { getAllCountry, addCountry, deleteCountryById } from "../../actions";
 import { Input } from "../../components/UI/Input";
-
+import './style.css'
 export const Country = (props) => {
     const [show, setShow] = useState(false);
     const [nameCountry, setNameCountry] = useState('')
@@ -15,11 +15,11 @@ export const Country = (props) => {
         // console.log('category.js')
         dispatch(getAllCountry())
     }, [])
-    
+
     const handleClose = () => {
         const country = {
             name: nameCountry
-        } 
+        }
         if (nameCountry === "") {
             alert('Country name is required');
             setShow(false);
@@ -38,8 +38,17 @@ export const Country = (props) => {
         let countryList = []
         for (let country of countries) {
             countryList.push(
-                <li key={country.name}>
-                    {country.name}
+                <li key={country._id}>
+                    <div className="category">
+                        <h4 className="name-category">{country.name}</h4>
+                        <Button onClick={() => {
+                            const payload = {
+                                countryId: country._id,
+                            };
+                            dispatch(deleteCountryById(payload));
+                        }} size="sm">Remove</Button>
+                    </div>
+
                 </li>
             )
         }
@@ -51,7 +60,7 @@ export const Country = (props) => {
                 <Row>
                     <Col md={12}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <h3>Country list</h3>
+                            <h3>Country list:</h3>
                             <button className="btn btn-primary" onClick={handleShow}>Add</button>
                         </div>
                     </Col>
@@ -68,9 +77,9 @@ export const Country = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Input
-                       value={nameCountry}
-                       placeholder='Enter new category'
-                       onChange={(e) => {setNameCountry(e.target.value)}}
+                        value={nameCountry}
+                        placeholder='Enter new category'
+                        onChange={(e) => { setNameCountry(e.target.value) }}
                     />
                 </Modal.Body>
                 <Modal.Footer>
