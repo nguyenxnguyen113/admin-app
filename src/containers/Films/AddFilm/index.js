@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { addFilm } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "../../../components/UI/Input";
-import {storage} from '../../../firebase'
+import { storage } from '../../../firebase'
 
 
-import {  Modal, Button ,Image} from "react-bootstrap";
+import { Modal, Button, Image } from "react-bootstrap";
 
 function AddFilm(props) {
-    const {show ,setShow} = props
+    const { show, setShow } = props
 
-    const [isUploadedImage,setIsUploadedImage] = useState(false) 
+    const [isUploadedImage, setIsUploadedImage] = useState(false)
     const imageUploadedRef = useRef([])
-    const [imageUrl,setImageUrl] = useState([])
+    const [imageUrl, setImageUrl] = useState([])
     const [name, setName] = useState('')
     const [ename, setEname] = useState('')
     const [img, setImg] = useState('')
@@ -50,78 +50,94 @@ function AddFilm(props) {
         }
         return options;
     };
-    const handleClick = (value)=>{
-        if(value === 'category') setCategories([...categories,"default"])
-        if(value === 'actors') setActors([...actors,"default"])
+    const handleClick = (value) => {
+        if (value === 'category') setCategories([...categories, "default"])
+        if (value === 'actors') setActors([...actors, "default"])
     }
-    const handleUploadImg = async (e,name)=>{
-         console.log(e.target.files[0])
-         if(e.target.files[0]!==undefined){
+    const handleUploadImg = async (e, name) => {
+        console.log(e.target.files[0])
+        if (e.target.files[0] !== undefined) {
             imageUploadedRef.current.push({
-                name:name,
-                img:e.target.files[0]
+                name: name,
+                img: e.target.files[0]
             })
             e.target.files = null
             console.log(imageUploadedRef.current);
             imageUploadedRef.current.forEach(
                 (item) => {
                     console.log(item);
-                    setImageUrl([...imageUrl,URL.createObjectURL(item.img)])
+                    setImageUrl([...imageUrl, URL.createObjectURL(item.img)])
                 }
             )
         }
-       
+
     }
-    const checkNull = ()=>{
-        if(name.trim()==="") return true
-        if(ename.trim()==="") return true
-        if(img.trim()==="") return true
-        if(largerImg.trim === "") return true
-        if(url.trim() === "") return true
-        if(description.trim() === "") return true
-        if(categories.find((item)=>item==='default')) return true
-        if(actors.find((item)=>item==='default')) return true
-        if(year === "default") return true
-        if(countryId.trim() === "") return true
+    const checkNull = () => {
+        if (name.trim() === "") return true
+        if (ename.trim() === "") return true
+        if (img.trim() === "") return true
+        if (largerImg.trim === "") return true
+        if (url.trim() === "") return true
+        if (description.trim() === "") return true
+        if (categories.find((item) => item === 'default')) return true
+        if (actors.find((item) => item === 'default')) return true
+        if (year === "default") return true
+        if (countryId.trim() === "") return true
     }
     const handleClose = () => {
-        if (imageUploadedRef.current.length > 0) {
-            for (let i = 0; i < imageUploadedRef.current.length; i++) {
-                const uploadTask = storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
-                uploadTask.on(
-                    "state_changed",
-                    snapshot => { },
-                    err => {
-                        console.log(err)
-                    },
-                    () => {
-                        storage
-                            .ref("images")
-                            .child(imageUploadedRef.current[i].img.name)
-                            .getDownloadURL()
-                            .then(url => {
-                                if(imageUploadedRef.current[i].name==='image'){
-                                    setImg(url)
-                                }
-                                else setLargerImg(url)
-                            })
-                            .then(()=>{
-                                setTimeout(()=>{
-                                    if (i === imageUploadedRef.current.length - 1) {
-                                        setIsUploadedImage(true)
-                                        imageUploadedRef.current = []
-                                        setImageUrl([])
+        if(!checkNull()){
+            if (imageUploadedRef.current.length > 0) {
+                for (let i = 0; i < imageUploadedRef.current.length; i++) {
+                    const uploadTask = storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
+                    uploadTask.on(
+                        "state_changed",
+                        snapshot => { },
+                        err => {
+                            console.log(err)
+                        },
+                        () => {
+                            storage
+                                .ref("images")
+                                .child(imageUploadedRef.current[i].img.name)
+                                .getDownloadURL()
+                                .then(url => {
+                                    if (imageUploadedRef.current[i].name === 'image') {
+                                        setImg(url)
                                     }
-                                },1000)
-                            })
-                    }
-                )
+                                    else setLargerImg(url)
+                                })
+                                .then(() => {
+                                    setTimeout(() => {
+                                        if (i === imageUploadedRef.current.length - 1) {
+                                            setIsUploadedImage(true)
+                                            imageUploadedRef.current = []
+                                            setImageUrl([])
+                                        }
+                                    }, 1000)
+                                })
+                        }
+                    )
+                }
             }
+        }else {
+            alert('you have to enter valid Values')
+            setEname('')
+            setName('')
+            setImg('')
+            setLargerImg('')
+            setUrl('')
+            setDescription('')
+            setCategories(["default"])
+            setCountryId('')
+            setActors(["default"])
+            setShow(false)
+            setIsUploadedImage(false)
         }
+
     };
 
-    useEffect(()=>{
-        if(isUploadedImage){
+    useEffect(() => {
+        if (isUploadedImage) {
             const newFilm = {
                 name: name,
                 ename: ename,
@@ -134,10 +150,10 @@ function AddFilm(props) {
                 countries: countryId,
                 year: year
             }
-            if(checkNull()) {
+            if (checkNull()) {
                 alert('you have to enter valid Values')
             }
-            else{
+            else {
                 dispatch(addFilm(newFilm))
             }
             setEname('')
@@ -152,14 +168,14 @@ function AddFilm(props) {
             setShow(false)
             setIsUploadedImage(false)
         }
-    },[isUploadedImage])
+    }, [isUploadedImage])
     return (
         <div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>
                     <Modal.Title>Add New Category</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{overflow:'hidden'}}>
                     <Input
                         label="Name"
                         value={name}
@@ -172,34 +188,32 @@ function AddFilm(props) {
                         placeholder='Enter new english name film'
                         onChange={(e) => { setEname(e.target.value) }}
                     />
-                    {   
 
-                        img === '' ? <Input
-                            type="file"
-                            label="image"
-                            placeholder='Enter new img'
-                            onChange={(e)=>{
-                                handleUploadImg(e,'image')
-                            }}
-                    /> : <p>{img}</p>
-                    }
-                    {
-                        largerImg === '' ? <Input
-                            label="Larger img"
-                            type="file"
-                            placeholder='Enter new larger img film'
-                            onChange={(e)=>{
-                                handleUploadImg(e,'largeImage')
-                            }}
-                    /> :<p>{largerImg}</p>
-                    }
+                    <Input
+                        type="file"
+                        label="image"
+                        placeholder='Enter new img'
+                        onChange={(e) => {
+                            handleUploadImg(e, 'image')
+                        }}
+                    />
+
+                    <Input
+                        label="Larger img"
+                        type="file"
+                        placeholder='Enter new larger img film'
+                        onChange={(e) => {
+                            handleUploadImg(e, 'largeImage')
+                        }}
+                    />
+
                     <div style={{
-                        display:"flex",
+                        display: "flex",
                     }}>
                         {
-                             imageUrl.length>0&&imageUrl.map((item,index)=>
-                             <Image key={index} style={{width:"100px",marginRight:'10px'}} src={item} rounded/>
-                                )
+                            imageUrl.length > 0 && imageUrl.map((item, index) =>
+                                <Image key={index} style={{ width: "100px", marginRight: '10px' }} src={item} rounded />
+                            )
                         }
                     </div>
                     <Input
@@ -228,32 +242,32 @@ function AddFilm(props) {
                         </select>
                     </div>
                     Select category
-                  <div>   
+                  <div>
                         {
-                            categories.map((item,index)=>{
+                            categories.map((item, index) => {
                                 console.log(item);
                                 return (
-                                <select 
-                                    key={index}
-                                    className="form-control"
-                                    value={item}
-                                    onChange={(e)=>{
-                                        let newArr = categories
-                                        newArr[index] = e.target.value
-                                        setCategories([...newArr])
-                                    }}
-                                >
+                                    <select
+                                        key={index}
+                                        className="form-control"
+                                        value={item}
+                                        onChange={(e) => {
+                                            let newArr = categories
+                                            newArr[index] = e.target.value
+                                            setCategories([...newArr])
+                                        }}
+                                    >
                                         <option value="default">select category</option>
                                         {createCategoryList(category.categoryList).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
                                             </option>
                                         ))}
-                                </select>
+                                    </select>
                                 )
                             })
                         }
-                        <Button onClick={(e)=>{
+                        <Button onClick={(e) => {
                             handleClick('category')
                         }}>+</Button>
                     </div>
@@ -272,31 +286,31 @@ function AddFilm(props) {
                     </select>
 
                     Select actor
-                    <div>   
+                    <div>
                         {
-                            actors.map((item,index)=>{
+                            actors.map((item, index) => {
                                 return (
-                                <select
-                                    key={index}
-                                    className="form-control"
-                                    value={item}
-                                    onChange={(e)=>{
-                                        let newArr = actors
-                                        newArr[index] = e.target.value
-                                        setActors([...newArr])
-                                    }}
-                                >
+                                    <select
+                                        key={index}
+                                        className="form-control"
+                                        value={item}
+                                        onChange={(e) => {
+                                            let newArr = actors
+                                            newArr[index] = e.target.value
+                                            setActors([...newArr])
+                                        }}
+                                    >
                                         <option value="default">select actor</option>
                                         {createActorList(actor.actorList).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
                                             </option>
                                         ))}
-                                </select>
+                                    </select>
                                 )
                             })
                         }
-                        <Button onClick={(e)=>{
+                        <Button onClick={(e) => {
                             handleClick('actors')
                         }}>+</Button>
                     </div>
