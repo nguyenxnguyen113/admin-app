@@ -73,68 +73,102 @@ function AddFilm(props) {
 
     }
     const checkNull = () => {
-        if (name.trim() === "") return true
-        if (ename.trim() === "") return true
-        if (img.trim() === "") return true
-        if (largerImg.trim === "") return true
-        if (url.trim() === "") return true
-        if (description.trim() === "") return true
-        if (categories.find((item) => item === 'default')) return true
-        if (actors.find((item) => item === 'default')) return true
-        if (year === "default") return true
-        if (countryId.trim() === "") return true
+        if (name.trim() === "") {
+            console.log(name);
+            return true
+        }
+        if (ename.trim() === "") {
+            console.log(2);
+            return true
+        }
+        if (img.trim() === "") {
+            console.log(3);
+            return true
+        }
+        if (largerImg.trim === "") {
+            console.log(4);
+            return true
+        }
+        if (url.trim() === "") {
+            console.log(5);
+            return true
+        }
+        if (description.trim() === "") {
+            console.log(6);
+            return true
+        }
+        if (categories.find((item) => item === 'default')) {
+            console.log(7);
+            return true
+        }
+        if (actors.find((item) => item === 'default')) {
+            console.log(8);
+            return true
+        }
+        if (year === "default") {
+            console.log(9);
+            return true
+        }
+        if (countryId.trim() === "") {
+            console.log(10);
+            return true
+        }
     }
-    const handleClose = () => {
-        if(!checkNull()){
+    const handleClose =  () => {
             if (imageUploadedRef.current.length > 0) {
                 for (let i = 0; i < imageUploadedRef.current.length; i++) {
-                    const uploadTask = storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
-                    uploadTask.on(
-                        "state_changed",
-                        snapshot => { },
-                        err => {
-                            console.log(err)
-                        },
-                        () => {
-                            storage
-                                .ref("images")
-                                .child(imageUploadedRef.current[i].img.name)
-                                .getDownloadURL()
-                                .then(url => {
-                                    if (imageUploadedRef.current[i].name === 'image') {
-                                        setImg(url)
-                                    }
-                                    else setLargerImg(url)
-                                })
-                                .then(() => {
-                                    setTimeout(() => {
-                                        if (i === imageUploadedRef.current.length - 1) {
-                                            setIsUploadedImage(true)
-                                            imageUploadedRef.current = []
-                                            setImageUrl([])
+                    
+                        const uploadTask =  storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
+                        uploadTask.on(
+                            "state_changed",
+                            snapshot => { },
+                            err => {
+                                console.log(err)
+                            },
+                            () => {
+                                storage
+                                    .ref("images")
+                                    .child(imageUploadedRef.current[i].img.name)
+                                    .getDownloadURL()
+                                    .then(url => {
+                                        if (imageUploadedRef.current[i].name === 'image') {
+                                            setImg(url)
                                         }
-                                    }, 1000)
-                                })
-                        }
-                    )
-                }
+                                        else setLargerImg(url)
+                                    })
+                                    .then(() => {
+                                        setTimeout(() => {
+                                            if (i === imageUploadedRef.current.length - 1) {
+                                                setIsUploadedImage(true)
+                                                imageUploadedRef.current = []
+                                                setImageUrl([])
+                                            }
+                                        }, 1000)
+                                    })
+                            }
+                        )
+                    }
+                    
+                    
+                
             }
-        }else {
-            alert('you have to enter valid Values')
-            setEname('')
-            setName('')
-            setImg('')
-            setLargerImg('')
-            setUrl('')
-            setDescription('')
-            setCategories(["default"])
-            setCountryId('')
-            setActors(["default"])
-            setShow(false)
-            setIsUploadedImage(false)
+            else{
+                alert('you have to enter valid Values')
+                setEname('')
+                setName('')
+                setImg('')
+                setLargerImg('')
+                setUrl('')
+                setDescription('')
+                setCategories(["default"])
+                setCountryId('')
+                setYear('default')
+                setActors(["default"])
+                setShow(false)
+                setIsUploadedImage(false)
+            }
         }
 
-    };
 
     useEffect(() => {
         if (isUploadedImage) {
@@ -160,6 +194,7 @@ function AddFilm(props) {
             setName('')
             setImg('')
             setLargerImg('')
+            setYear('default')
             setUrl('')
             setDescription('')
             setCategories(["default"])
