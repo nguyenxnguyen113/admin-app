@@ -10,12 +10,13 @@ import {  Modal, Button } from "react-bootstrap";
 
 function EditFilm(props) {
     const {showEdit ,setShowEdit, data} = props
-
+    console.log("data:",data);
     const [name, setName] = useState('')
     const [ename, setEname] = useState('')
     const [img, setImg] = useState('')
     const [largerImg, setLargerImg] = useState('')
     const [url, setUrl] = useState('')
+    const [streamTapeId,setStreamTapeId] = useState('')
     const [year, setYear] = useState('default')
     const [description, setDescription] = useState('')
     const [countryId, setCountryId] = useState('');
@@ -82,6 +83,7 @@ function EditFilm(props) {
         if(img.trim()==="") return true
         if(largerImg.trim === "") return true
         if(url.trim() === "") return true
+        if(streamTapeId.trim() === "") return true
         if(description.trim() === "") return true
         if(categories.find((item)=>item==='default')) return true
         if(actors.find((item)=>item==='default')) return true
@@ -95,6 +97,7 @@ function EditFilm(props) {
             img: img,
             largerImg: largerImg,
             url: url,
+            streamTapeId:streamTapeId,
             description: description,
             categories: categories,
             actors: actors,
@@ -112,6 +115,7 @@ function EditFilm(props) {
         setImg('')
         setLargerImg('')
         setUrl('')
+        setStreamTapeId('')
         setDescription('')
         setCategories(["default"])
         setCountryId('')
@@ -166,6 +170,12 @@ function EditFilm(props) {
                         value={url}
                         placeholder={data.url}
                         onChange={(e) => { setUrl(e.target.value) }}
+                    />
+                     <Input
+                        label="URL film"
+                        value={streamTapeId}
+                        placeholder={data.streamTapeId}
+                        onChange={(e) => { setStreamTapeId(e.target.value) }}
                     />
                     <Input
                         label="Description"

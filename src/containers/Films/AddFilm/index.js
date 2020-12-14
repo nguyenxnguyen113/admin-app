@@ -19,6 +19,7 @@ function AddFilm(props) {
     const [img, setImg] = useState('')
     const [largerImg, setLargerImg] = useState('')
     const [url, setUrl] = useState('')
+    const [streamTapeId,setStreamTapeId] = useState('')
     const [year, setYear] = useState('default')
     const [description, setDescription] = useState('')
     const [countryId, setCountryId] = useState('');
@@ -160,6 +161,7 @@ function AddFilm(props) {
                 setLargerImg('')
                 setUrl('')
                 setDescription('')
+                setStreamTapeId('')
                 setCategories(["default"])
                 setCountryId('')
                 setYear('default')
@@ -178,6 +180,7 @@ function AddFilm(props) {
                 img: img,
                 largerImg: largerImg,
                 url: url,
+                streamTapeId:streamTapeId,
                 description: description,
                 categories: categories,
                 actors: actors,
@@ -194,6 +197,7 @@ function AddFilm(props) {
             setName('')
             setImg('')
             setLargerImg('')
+            setStreamTapeId('')
             setYear('default')
             setUrl('')
             setDescription('')
@@ -256,6 +260,12 @@ function AddFilm(props) {
                         value={url}
                         placeholder='Enter url'
                         onChange={(e) => { setUrl(e.target.value) }}
+                    />
+                    <Input
+                        label="Stream Tape Id"
+                        value={streamTapeId}
+                        placeholder='Enter StreamTape Id'
+                        onChange={(e) => { setStreamTapeId(e.target.value) }}
                     />
                     <Input
                         label="Description"

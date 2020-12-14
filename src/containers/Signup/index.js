@@ -7,8 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../actions";
 export const Signup = (props) => {
   
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [userName,setUserName] =  useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const auth = useSelector(state => state.auth)
@@ -18,7 +17,7 @@ export const Signup = (props) => {
   const userSignup = (e) => {
     e.preventDefault()
     const user = {
-      firstName, lastName, email, password
+      userName, email, password
     }
     dispatch(signup(user))
     
@@ -37,26 +36,15 @@ export const Signup = (props) => {
         <Row style={{ marginTop: "50px" }}>
           <Col md={{ span: 6, offset: 3 }}>
             <Form onSubmit={userSignup}>
-              <Row>
-                <Col md={6}>
-                  <Input
-                    label="First name"
-                    type="text"
-                    placeholder="First name"
-                    value={firstName}
-                    onChange={(e) => {setFirstName(e.target.value)}}
-                  />
-                </Col>
-                <Col md={6}>
-                  <Input
-                    label="Last name"
-                    type="text"
-                    placeholder="Last name"
-                    value={lastName}
-                    onChange={(e) => {setLastName(e.target.value)}}
-                  />
-                </Col>
-              </Row>
+              <Input 
+              label="User Name" 
+              type="text" 
+              placeholder="Enter your full Name" 
+              value={userName}
+              onChange={(e)=>{
+                setUserName(e.target.value)
+              }}
+              />
               <Input
                 label="Email"
                 type="email"

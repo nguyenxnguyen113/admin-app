@@ -40,7 +40,7 @@ const Header = (props) => {
   };
   return (
     <div style={{
-      position:'fixed',
+      // position:'fixed',
       width:'100%',
       zIndex:'1000'
     }}>
