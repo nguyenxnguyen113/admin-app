@@ -20,7 +20,7 @@ export const Signup = (props) => {
       userName, email, password
     }
     dispatch(signup(user))
-    
+
   }
 
   if (auth.authenticate) {
@@ -28,7 +28,7 @@ export const Signup = (props) => {
   }
   if (user.loading) {
     return <p>Loading ...!</p>
-  } 
+  }
   return (
     <Layout>
       <Container>
@@ -50,7 +50,7 @@ export const Signup = (props) => {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => {setEmail(e.target.value)}}
+                onChange={(e) => { setEmail(e.target.value) }}
               />
 
               <Input
@@ -58,9 +58,9 @@ export const Signup = (props) => {
                 type="password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => {setPassword(e.target.value)}}
+                onChange={(e) => { setPassword(e.target.value) }}
               />
-              <Button variant="primary" type="submit">
+              <Button onClick={userSignup} variant="primary" type="submit">
                 Submit
               </Button>
             </Form>
