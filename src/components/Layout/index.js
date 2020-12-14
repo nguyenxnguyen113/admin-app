@@ -31,6 +31,9 @@ export const Layout = (props) => {
                 <li>
                   <NavLink to={`/countries`}>Countries</NavLink>
                 </li>
+                <li>
+                  <NavLink to={`/filmError`}>Error Films</NavLink>
+                </li>
               </ul>
             </Col>
             <Col md={10} style={{ marginLeft: "auto", paddingTop: "60px" }}>

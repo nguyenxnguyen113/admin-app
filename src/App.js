@@ -12,6 +12,7 @@ import InfoFilm from './containers/Films/InfoFilm'
 import { Category } from "./containers/Categories";
 import { Actor } from "./containers/Actors";
 import { Country } from "./containers/Countries";
+import filmError  from './containers/FilmError'
 
 function App() {
   const dispatch = useDispatch()
@@ -32,6 +33,7 @@ function App() {
           <PrivateRoute path='/categories' exact component={Category}/>
           <PrivateRoute path='/actors' exact component={Actor}/>
           <PrivateRoute path='/countries' exact component={Country}/>
+          <PrivateRoute path='/filmError' exact component={filmError}/>
           <Route path='/signin'  component={Signin}/>
           <Route path='/signup' component={Signup}/>
         </Switch>
