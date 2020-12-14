@@ -6,9 +6,8 @@ import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../actions";
 export const Signup = (props) => {
-  
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+
+  const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const auth = useSelector(state => state.auth)
@@ -18,10 +17,10 @@ export const Signup = (props) => {
   const userSignup = (e) => {
     e.preventDefault()
     const user = {
-      firstName, lastName, email, password
+      userName, email, password
     }
     dispatch(signup(user))
-    
+
   }
 
   if (auth.authenticate) {
@@ -29,7 +28,7 @@ export const Signup = (props) => {
   }
   if (user.loading) {
     return <p>Loading ...!</p>
-  } 
+  }
   return (
     <Layout>
       <Container>
@@ -37,32 +36,19 @@ export const Signup = (props) => {
         <Row style={{ marginTop: "50px" }}>
           <Col md={{ span: 6, offset: 3 }}>
             <Form onSubmit={userSignup}>
-              <Row>
-                <Col md={6}>
-                  <Input
-                    label="First name"
-                    type="text"
-                    placeholder="First name"
-                    value={firstName}
-                    onChange={(e) => {setFirstName(e.target.value)}}
-                  />
-                </Col>
-                <Col md={6}>
-                  <Input
-                    label="Last name"
-                    type="text"
-                    placeholder="Last name"
-                    value={lastName}
-                    onChange={(e) => {setLastName(e.target.value)}}
-                  />
-                </Col>
-              </Row>
+              <Input
+                label="User name"
+                type="text"
+                placeholder="Enter your name"
+                value={userName}
+                onChange={(e) => { setUserName(e.target.value) }}
+              />
               <Input
                 label="Email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => {setEmail(e.target.value)}}
+                onChange={(e) => { setEmail(e.target.value) }}
               />
 
               <Input
@@ -70,9 +56,9 @@ export const Signup = (props) => {
                 type="password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => {setPassword(e.target.value)}}
+                onChange={(e) => { setPassword(e.target.value) }}
               />
-              <Button variant="primary" type="submit">
+              <Button onClick={userSignup} variant="primary" type="submit">
                 Submit
               </Button>
             </Form>
