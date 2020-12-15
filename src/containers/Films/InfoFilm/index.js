@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react'
+
 import { Col, Image, ListGroup, Figure, Button } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { getFilmById } from '../../../actions'
 import { Layout } from '../../../components/Layout'
 
 function InfoFilm(props) {
 
     const { id } = useParams()
+    console.log(id)
     const [viewFilm,setViewFilm] = useState()
     const [viewComment,setComment] = useState()
+    const category = useSelector((state) => state.category);
+    const actor = useSelector(state => state.actor)
+    const country = useSelector((state) => state.country);
+    const product = useSelector((state) => state.product)
+    console.log(product.product)
+    const dispatch = useDispatch();
     useEffect(()=>{
-
+        dispatch(getFilmById(id))
     },[])
     return (
         <Layout sidebar>
@@ -19,12 +29,12 @@ function InfoFilm(props) {
             }} xs={12} md={12}>
                 <Image style={{
                     width: "40%"
-                }} src="https://wallpaperaccess.com/full/546690.jpg" rounded />
+                }} src={product.product.largerImg} rounded />
             </Col>
             <div className="col-12 d-flex justify-content-center" >
                 <ListGroup className="col-8 mt-2">
-                    <ListGroup.Item>VieName: Iron man</ListGroup.Item>
-                    <ListGroup.Item>EngName: Iron man</ListGroup.Item>
+                    <ListGroup.Item>VieName: {product.product.name}</ListGroup.Item>
+                    <ListGroup.Item>EngName: {product.product.ename}</ListGroup.Item>
                     <ListGroup.Item>
                         <p>Actors:</p>
                         <div>
@@ -67,28 +77,21 @@ function InfoFilm(props) {
                         </div>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        Release year: 2020
+                        Release year: {product.product.year}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        Categories: <span>Action</span> <span>Action</span>
+                        Categories: {product.product.nameCategories}
                     </ListGroup.Item>
                     <ListGroup.Item style={{
                         width:'100%'
                     }}>
                         Description: 
                         <p>
-                            Giờ đây thế giới đã biết nhà phát minh tỷ phú Tony Stark chính là siêu anh hùng Người Sắt. 
-                            Dưới áp lực từ chính phủ, báo chí và công chúng về việc chia sẻ công nghệ của mình với quân đội, 
-                            Tony không muốn tiết lộ bí mật đằng sau áo giáp Người Sắt vì anh sợ thông tin này sẽ rơi vào tay kẻ xấu... 
-                            Iron Man 2 là siêu phẩm anh hùng chuyển thể từ truyện tranh trong vũ trụ điện ảnh của Marvel, 
-                            hé lộ nhiều thông tin về các bộ phim siêu anh hùng khác
+                            {product.product.description}
                         </p>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        Country: <span>VietNam</span>
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                        Url: <span>VietNam</span> <Button>View</Button>
+                        Country: <span>{product.product.nameCountries}</span>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         Comment: <Button>View</Button>

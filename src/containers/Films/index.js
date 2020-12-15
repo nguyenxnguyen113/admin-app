@@ -14,6 +14,8 @@ export const Film = (props) => {
 
     const [show, setShow] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [pageNumber, setPageNumber] = useState(0);
+    const [numberOfPages, setNumberOfPages] = useState(0);
     const history = useHistory()
     const category = useSelector((state) => state.category);
     const product = useSelector((state) => state.product);
@@ -27,17 +29,27 @@ export const Film = (props) => {
         dispatch(getAllCategory())
         dispatch(getAllActor())
         dispatch(getAllCountry())
-        dispatch(getAllFilm())
+        dispatch(getAllFilm(pageNumber))
+        setNumberOfPages(product.totalPages)
 
+    }, [pageNumber])
+    // console.log(Object.keys(product.product).length)
+    const gotoPrevious = () => {
+        setPageNumber(Math.max(0, pageNumber - 1));
+        console.log(pageNumber)
+        // dispatch(getAllCategory(pageNumber))
+    };
 
-    }, [])
-    console.log(Object.keys(product.product).length)
-
+    const gotoNext = () => {
+        setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
+        // dispatch(getAllCategory(pageNumber))
+        console.log(pageNumber)
+    };
     console.log(showEdit)
     const handleShow = () => setShow(true);
-    const handleShowEdit = async (id) => { 
-        await dispatch(getFilmById(id)) 
-        setShowEdit(true)      
+    const handleShowEdit = async (id) => {
+        await dispatch(getFilmById(id))
+        setShowEdit(true)
     };
     // const handleChange = (e) => {
     //     setCategoryId(e => e.target.value)
@@ -101,6 +113,7 @@ export const Film = (props) => {
             </Table>
         );
     };
+    const pages = new Array(product.totalPages).fill(null).map((v, i) => i);
     return (
         <Layout sidebar>
             <Container>
@@ -115,6 +128,13 @@ export const Film = (props) => {
                 <Row>
                     {renderFilms()}
                 </Row>
+                <Button onClick={gotoPrevious}>Previous</Button>
+                {pages.map((pageIndex) => (
+                    <Button key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+                        {pageIndex + 1}
+                    </Button>
+                ))}
+                <Button onClick={gotoNext}>Next</Button>
             </Container>
 
             <EditFilm showEdit={showEdit} setShowEdit={setShowEdit} data={product.product} />

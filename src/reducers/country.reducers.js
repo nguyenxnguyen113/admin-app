@@ -3,13 +3,15 @@ import { countryConstansts } from "../actions/constants";
 const initState = {
     countryList: [],
     loading: false,
-    error: null
+    error: null,
+    totalPages: 0,
+    country: []
 }
 
-const buildNewCategories = (parentId,categories, category) => {
+const buildNewCategories = (parentId, categories, category) => {
     let myCountries = []
 
-    for(let cat of categories) {
+    for (let cat of categories) {
         const newCategory = {
             _id: category._id,
             name: category.name,
@@ -31,7 +33,8 @@ export default (state = initState, action) => {
         case countryConstansts.GET_ALL_COUNTRY_SUCCESS:
             state = {
                 ...state,
-                countryList: action.payload.countryList
+                countryList: action.payload.countryList,
+                totalPages: action.payload.totalPages
             }
             break;
         case countryConstansts.ADD_NEW_COUNTRY_REQUEST:
@@ -42,17 +45,23 @@ export default (state = initState, action) => {
             break;
         case countryConstansts.ADD_NEW_COUNTRY_SUCCESS:
             const country = action.payload.country
-            const updatedCountries = buildNewCategories(country._id,state.countryList, country)
+            const updatedCountries = buildNewCategories(country._id, state.countryList, country)
             console.log('updated category', updatedCountries)
             state = {
                 ...state,
                 countryList: updatedCountries,
                 loading: false
-            }  
+            }
             break;
         case countryConstansts.ADD_NEW_COUNTRY_FAILURE:
             state = {
                 initState
+            }
+            break;
+        case countryConstansts.GET_COUNTRY_SUCCESS:
+            state = {
+                ...state,
+                country: action.payload.country
             }
             break;
     }

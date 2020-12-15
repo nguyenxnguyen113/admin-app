@@ -30,19 +30,19 @@ export const getFilmById = (id) => {
   }
 }
 
-export const getAllFilm = () => {
+export const getAllFilm = (pageNumber) => {
   return async (dispatch) => {
     dispatch({
       type: productConstants.GET_ALL_PRODUCTS_REQUEST,
     })
-    const res = await axios.get(`/product/getproduct`)
+    const res = await axios.get(`/product/getproduct?page=${pageNumber}`)
     console.log(res)
-    const { products } = res.data
+    const { products, totalPages } = res.data
 
     if (res.status === 200) {
       dispatch({
         type: productConstants.GET_ALL_PRODUCTS_SUCCESS,
-        payload: { productList: products }
+        payload: { productList: products, totalPages:  totalPages }
       })
     } else {
       dispatch({

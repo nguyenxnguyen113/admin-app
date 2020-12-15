@@ -2,14 +2,16 @@ import { categoryConstansts } from "../actions/constants";
 
 const initState = {
     categoryList: [],
+    totalPages: 0,
     loading: false,
-    error: null
+    error: null,
+    category: []
 }
 
-const buildNewCategories = (parentId,categories, category) => {
+const buildNewCategories = (parentId, categories, category) => {
     let myCategories = []
 
-    for(let cat of categories) {
+    for (let cat of categories) {
         const newCategory = {
             _id: category._id,
             name: category.name,
@@ -31,7 +33,8 @@ export default (state = initState, action) => {
         case categoryConstansts.GET_ALL_CATEGORIES_SUCCESS:
             state = {
                 ...state,
-                categoryList: action.payload.categoryList
+                categoryList: action.payload.categoryList,
+                totalPages: action.payload.totalPages
             }
             break;
         case categoryConstansts.ADD_NEW_CATEGORY_REQUEST:
@@ -42,17 +45,23 @@ export default (state = initState, action) => {
             break;
         case categoryConstansts.ADD_NEW_CATEGORY_SUCCESS:
             const category = action.payload.category
-            const updatedCategories = buildNewCategories(category._id,state.categoryList, category)
+            const updatedCategories = buildNewCategories(category._id, state.categoryList, category)
             console.log('updated category', updatedCategories)
             state = {
                 ...state,
                 categories: updatedCategories,
                 loading: false
-            }  
+            }
             break;
         case categoryConstansts.ADD_NEW_CATEGORY_FAILURE:
             state = {
                 initState
+            }
+            break;
+        case categoryConstansts.GET_CATEGORY_SUCCESS:
+            state = {
+                ...state,
+                category: action.payload.category
             }
             break;
     }
