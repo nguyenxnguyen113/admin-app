@@ -46,3 +46,28 @@ export const addCategory = (form) => {
 
     }
 }
+
+export const deleteCategoryById = (payload) => {
+    return async (dispatch) => {
+        try {
+            const res = await axios.delete(`/category/deleteCategory`, {
+                data: { payload },
+            });
+            dispatch({ type: categoryConstansts.DELETE_CATEGORIES_REQUEST });
+            if (res.status === 202) {
+                dispatch({ type: categoryConstansts.DELETE_CATEGORIES_SUCCESS });
+                dispatch(getAllCategory());
+            } else {
+                const { error } = res.data;
+                dispatch({
+                    type: categoryConstansts.DELETE_CATEGORIES_FAILURE,
+                    payload: {
+                        error,
+                    },
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};

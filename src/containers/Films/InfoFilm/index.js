@@ -3,7 +3,7 @@ import { Col, Image, ListGroup, Figure, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import { Layout } from '../../../components/Layout'
 
-function InfoFilm() {
+function InfoFilm(props) {
 
     const { id } = useParams()
     const [viewFilm,setViewFilm] = useState()

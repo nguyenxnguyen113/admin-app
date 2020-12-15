@@ -1,23 +1,26 @@
 import React from 'react'
-import { useEffect, useState } from "react";
-import { addFilm } from "../../../actions";
+import { useEffect, useState, useRef } from "react";
+import { addFilm, editProductById } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "../../../components/UI/Input";
-import {storage} from '../../../firebase'
+import { storage } from '../../../firebase'
 
 
-import {  Modal, Button } from "react-bootstrap";
+import { Modal, Button, Image } from "react-bootstrap";
 
 function EditFilm(props) {
-    const {showEdit ,setShowEdit, data} = props
-    console.log("data:",data);
+    const { showEdit, setShowEdit, data } = props
+    console.log("data:", data);
     const [name, setName] = useState('')
+    const [isUploadedImage, setIsUploadedImage] = useState(false)
+    const imageUploadedRef = useRef([])
+    const [imageUrl, setImageUrl] = useState([])
     const [ename, setEname] = useState('')
     const [img, setImg] = useState('')
     const [largerImg, setLargerImg] = useState('')
     const [url, setUrl] = useState('')
-    const [streamTapeId,setStreamTapeId] = useState('')
-    const [year, setYear] = useState('default')
+    const [streamTapeId, setStreamTapeId] = useState('')
+    const [year, setYear] = useState('')
     const [description, setDescription] = useState('')
     const [countryId, setCountryId] = useState('');
     const [categories, setCategories] = useState(["default"]);
@@ -26,9 +29,11 @@ function EditFilm(props) {
     const actor = useSelector(state => state.actor)
     const country = useSelector((state) => state.country);
     const film = useSelector((state) => state.film)
-    
+    console.log(data)
+    console.log(ename)
     const dispatch = useDispatch();
-
+    const a = data.nameCategories
+    const b = data.nameActors
     // Object.keys(film.product).length !== 0 ? setShowEdit(true) : setShowEdit(false)
     const createCategoryList = (categories, options = []) => {
         for (let category of categories) {
@@ -48,68 +53,59 @@ function EditFilm(props) {
         }
         return options;
     };
-    const handleClick = (value)=>{
-        if(value === 'category') setCategories([...categories,"default"])
-        if(value === 'actors') setActors([...actors,"default"])
+    const handleClick = (value) => {
+        if (value === 'category') setCategories([...categories, "default"])
+        if (value === 'actors') setActors([...actors, "default"])
     }
-    const handleUploadImg = (e,name)=>{
-        console.log(e.target.name)
-        const uploadTask = storage.ref(`images/${e.target.files[0].name}`).put(e.target.files[0])
-        uploadTask.on(
-            "state_changed",
-            snapshot => {  },
-            err => {
-                console.log(err)
-            },
-            () => {
-                storage
-                    .ref("images")
-                    .child(e.target.files[0].name)
-                    .getDownloadURL()
-                    .then(url => {
-                        if(name ==='image'){
-                            setImg(url)
-                        }
-                        if(name==='largeImage'){
-                            setLargerImg(url)
-                        }
-                    })
-            }
-        )
+    const handleUploadImg = async (e, name) => {
+        console.log(e.target.files[0])
+        if (e.target.files[0] !== undefined) {
+            imageUploadedRef.current.push({
+                name: name,
+                img: e.target.files[0]
+            })
+            e.target.files = null
+            console.log(imageUploadedRef.current);
+            imageUploadedRef.current.forEach(
+                (item) => {
+                    console.log(item);
+                    setImageUrl([...imageUrl, URL.createObjectURL(item.img)])
+                }
+            )
+        }
     }
-    const checkNull = ()=>{
-        if(name.trim()==="") return true
-        if(ename.trim()==="") return true
-        if(img.trim()==="") return true
-        if(largerImg.trim === "") return true
-        if(url.trim() === "") return true
-        if(streamTapeId.trim() === "") return true
-        if(description.trim() === "") return true
-        if(categories.find((item)=>item==='default')) return true
-        if(actors.find((item)=>item==='default')) return true
-        if(year === "default") return true
-        if(countryId.trim() === "") return true
-    }
+    // const checkNull = () => {
+    //     if (name.trim() === "") return true
+    //     if (ename.trim() === "") return true
+    //     if (img.trim() === "") return true
+    //     if (largerImg.trim === "") return true
+    //     if (url.trim() === "") return true
+    //     if (streamTapeId.trim() === "") return true
+    //     if (description.trim() === "") return true
+    //     if (categories.find((item) => item === 'default')) return true
+    //     if (actors.find((item) => item === 'default')) return true
+    //     if (year === "default") return true
+    //     if (countryId.trim() === "") return true
+    // }
     const handleClose = () => {
-        const newFilm = {
-            name: name,
-            ename: ename,
-            img: img,
-            largerImg: largerImg,
-            url: url,
-            streamTapeId:streamTapeId,
-            description: description,
-            categories: categories,
-            actors: actors,
-            countries: countryId,
-            year: year
+
+        const editedFilm = {
+            name: name == '' ? data.name : name,
+            ename: ename == '' ? data.ename : ename,
+            img: img == '' ? data.img : img,
+            largerImg: largerImg == '' ? data.largerImg : largerImg,
+            url: url == '' ? data.url : url,
+            streamTapeId: streamTapeId == '' ? data.streamTapeId : streamTapeId,
+            description: description == '' ? data.description : description,
+            categories: categories[0] == 'default' ? data.categories : categories,
+            actors: actors[0] == 'default' ? data.actors : actors,
+            countries: countryId == '' ? data.countries : country,
+            year: year == '' ? data.year : year
         }
-        if(checkNull()) {
-            alert('you have to enter valid Values')
-        }
-        else{
-            dispatch(addFilm(newFilm))
-        }
+        console.log(editedFilm)
+
+        dispatch(editProductById(editedFilm, data._id))
+
         setEname('')
         setName('')
         setImg('')
@@ -122,15 +118,18 @@ function EditFilm(props) {
         setActors(["default"])
         setShowEdit(false)
     };
-
-    useEffect(()=>{
+    const displayListAdded = (array) => {
+        array.nameCategories.map((value, index) => <li key={index}>{value}</li>)
+    }
+    useEffect(() => {
         console.log(categories);
-    },[categories])
+    }, [categories])
     return (
+
         <div>
             <Modal show={showEdit} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Edit </Modal.Title>
+                    <Modal.Title>Edit film {data.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Input
@@ -145,34 +144,37 @@ function EditFilm(props) {
                         placeholder={data.ename}
                         onChange={(e) => { setEname(e.target.value) }}
                     />
-                    {
-                        img === '' ? <Input
-                            type="file"
-                            label="image"
-                            placeholder='Enter new img'
-                            onChange={(e)=>{
-                                handleUploadImg(e,'image')
-                            }}
-                    /> : <p>{img}</p>
-                    }
-                    {
-                        largerImg === '' ? <Input
-                            label="Larger img"
-                            type="file"
-                            placeholder='Enter new larger img film'
-                            onChange={(e)=>{
-                                handleUploadImg(e,'largeImage')
-                            }}
-                    /> :<p>{largerImg}</p>
-                    }
+                    <Input
+                        type="file"
+                        label="image"
+                        placeholder='Enter new img'
+                        onChange={(e) => {
+                            handleUploadImg(e, 'image')
+                        }}
+                    />
+
+                    <Input
+                        label="Larger img"
+                        type="file"
+                        placeholder='Enter new larger img film'
+                        onChange={(e) => {
+                            handleUploadImg(e, 'largeImage')
+                        }}
+                    />
+                    <div style={{
+                        display: "flex",
+                    }}>
+                        <Image style={{ width: "100px", marginRight: '10px' }} src={data.img} rounded />
+                        <Image style={{ width: "100px", marginRight: '10px' }} src={data.largerImg} rounded />
+                    </div>
                     <Input
                         label="URL film"
                         value={url}
                         placeholder={data.url}
                         onChange={(e) => { setUrl(e.target.value) }}
                     />
-                     <Input
-                        label="URL film"
+                    <Input
+                        label="Stream Tape Id"
                         value={streamTapeId}
                         placeholder={data.streamTapeId}
                         onChange={(e) => { setStreamTapeId(e.target.value) }}
@@ -197,34 +199,44 @@ function EditFilm(props) {
                         </select>
                     </div>
                     Select category
-                  <div>   
+                  <div>
                         {
-                            categories.map((item,index)=>{
+                            categories.map((item, index) => {
                                 console.log(item);
                                 return (
-                                <select 
-                                    key={index}
-                                    className="form-control"
-                                    value={item}
-                                    onChange={(e)=>{
-                                        let newArr = categories
-                                        newArr[index] = e.target.value
-                                        setCategories([...newArr])
-                                    }}
-                                >
+                                    <select
+                                        key={index}
+                                        className="form-control"
+                                        value={item}
+                                        onChange={(e) => {
+                                            let newArr = categories
+                                            newArr[index] = e.target.value
+                                            const a = newArr.filter((value, index) => newArr.indexOf(value) === index)
+                                            setCategories([...a])
+                                        }}
+                                    >
                                         <option value="default">select category</option>
                                         {createCategoryList(category.categoryList).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
                                             </option>
                                         ))}
-                                </select>
+                                    </select>
                                 )
                             })
                         }
-                        <Button onClick={(e)=>{
+                        <ul>
+
+                        </ul>
+                        <Button onClick={(e) => {
                             handleClick('category')
                         }}>+</Button>
+                        <div className='list added'>
+                            <ul>
+                            <h3>Category list added</h3>
+                            { showEdit ? data.nameCategories.map((value, index) => <li key={index}>{value}</li>)  : null}
+                            </ul>
+                        </div>
                     </div>
                     Select country
                     <select
@@ -239,35 +251,46 @@ function EditFilm(props) {
                             </option>
                         ))}
                     </select>
+                    {data.nameCountries}
 
-                    Select actor
-                    <div>   
+                    <div>
+                        Select actor
                         {
-                            actors.map((item,index)=>{
+                            actors.map((item, index) => {
                                 return (
-                                <select
-                                    key={index}
-                                    className="form-control"
-                                    value={item}
-                                    onChange={(e)=>{
-                                        let newArr = actors
-                                        newArr[index] = e.target.value
-                                        setActors([...newArr])
-                                    }}
-                                >
+                                    <select
+                                        key={index}
+                                        className="form-control"
+                                        value={item}
+                                        onChange={(e) => {
+                                            let newArr = actors
+                                            newArr[index] = e.target.value
+                                            const a = newArr.filter((value, index) => newArr.indexOf(value) === index)
+                                            setActors([...a])
+                                        }}
+                                    >
                                         <option value="default">select actors</option>
                                         {createActorList(actor.actorList).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
                                             </option>
                                         ))}
-                                </select>
+
+                                    </select>
                                 )
                             })
                         }
-                        <Button onClick={(e)=>{
+
+                        <Button onClick={(e) => {
                             handleClick('actors')
                         }}>+</Button>
+
+                    </div>
+                    <div className='list-added'>
+                        <ul>
+                        <h4> Actor list added</h4>
+                        {showEdit ? data.nameActors.map((value, index) => <li key={index}>{value}</li>) : null}
+                        </ul>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

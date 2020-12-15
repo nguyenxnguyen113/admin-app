@@ -34,6 +34,7 @@ export const addCountry = (form) => {
                     type: countryConstansts.ADD_NEW_COUNTRY_SUCCESS,
                     payload: { country: res.data.country }
                 });
+                dispatch(getAllCountry())
             } else {
                 dispatch({
                     type: countryConstansts.ADD_NEW_COUNTRY_FAILURE,

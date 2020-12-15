@@ -18,7 +18,7 @@ export const Film = (props) => {
     const category = useSelector((state) => state.category);
     const product = useSelector((state) => state.product);
     console.log(product.product)
-    
+
     const data = category.categoryList
     const dispatch = useDispatch();
     console.log(category)
@@ -28,18 +28,21 @@ export const Film = (props) => {
         dispatch(getAllActor())
         dispatch(getAllCountry())
         dispatch(getAllFilm())
-        
-        
+
+
     }, [])
     console.log(Object.keys(product.product).length)
-    
+
     console.log(showEdit)
     const handleShow = () => setShow(true);
-    const handleShowEdit = () => setShowEdit(true);
+    const handleShowEdit = async (id) => { 
+        await dispatch(getFilmById(id)) 
+        setShowEdit(true)      
+    };
     // const handleChange = (e) => {
     //     setCategoryId(e => e.target.value)
     // }
-    const getFilm = (id) => {dispatch(getFilmById(id))}
+    const getFilm = (id) => { dispatch(getFilmById(id)) }
 
     const renderFilms = () => {
         return (
@@ -70,7 +73,7 @@ export const Film = (props) => {
                                     width: "10%"
                                 }}>
                                     <Image style={{
-                                        width:'100%',
+                                        width: '100%',
                                     }} src={film.img} rounded />
                                 </td>
                                 <td style={{
@@ -83,7 +86,7 @@ export const Film = (props) => {
                                     }} style={{
                                         marginBottom: "10px"
                                     }} size="md">View More</Button><br></br>
-                                    <Button onClick= {() => {dispatch(getFilmById(film._id)); setShowEdit(true)} } size="sm">Edit</Button> &nbsp;
+                                    <Button onClick={() => { handleShowEdit(film._id) }} size="sm">Edit</Button> &nbsp;
                                     <Button onClick={() => {
                                         const payload = {
                                             productId: film._id,
@@ -113,8 +116,8 @@ export const Film = (props) => {
                     {renderFilms()}
                 </Row>
             </Container>
-            
-            <EditFilm showEdit={showEdit} setShowEdit={setShowEdit} data={product.product}/>
+
+            <EditFilm showEdit={showEdit} setShowEdit={setShowEdit} data={product.product} />
             <AddFilm show={show} setShow={setShow} />
         </Layout>
     )

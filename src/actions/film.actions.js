@@ -3,7 +3,7 @@ import { productConstants } from "./constants";
 export const addFilm = form => {
   return async dispatch => {
     const res = await axios.post(`product/create`, form);
-    
+    dispatch(getAllFilm())
   }
 }
 
@@ -78,12 +78,10 @@ export const deleteProductById = (payload) => {
   };
 };
 
-export const editProductById = (payload) => {
+export const editProductById = (payload,id) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(`/product/editProductById/:id`, {
-        data: { payload },
-      });
+      const res = await axios.post(`/product/editProductById/${id}`, payload);
       dispatch({ type: productConstants.EDIT_PRODUCT_REQUEST });
       if (res.status !== 400) {
         dispatch({ type: productConstants.EDIT_PRODUCT_SUCCESS });

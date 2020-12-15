@@ -41,6 +41,7 @@ export const Country = (props) => {
                 <li key={country._id}>
                     <div className="category">
                         <h4 className="name-category">{country.name}</h4>
+                        {/* <Button onClick={() => { handleShowEdit(countryId._id) }} size="sm">Edit</Button> &nbsp; */}
                         <Button onClick={() => {
                             const payload = {
                                 countryId: country._id,

@@ -19,7 +19,7 @@ function AddFilm(props) {
     const [img, setImg] = useState('')
     const [largerImg, setLargerImg] = useState('')
     const [url, setUrl] = useState('')
-    const [streamTapeId,setStreamTapeId] = useState('')
+    const [streamTapeId, setStreamTapeId] = useState('')
     const [year, setYear] = useState('default')
     const [description, setDescription] = useState('')
     const [countryId, setCountryId] = useState('');
@@ -28,7 +28,7 @@ function AddFilm(props) {
     const category = useSelector((state) => state.category);
     const actor = useSelector(state => state.actor)
     const country = useSelector((state) => state.country);
-
+    console.log(actor)
     const dispatch = useDispatch();
 
 
@@ -71,7 +71,6 @@ function AddFilm(props) {
                 }
             )
         }
-
     }
     const checkNull = () => {
         if (name.trim() === "") {
@@ -115,61 +114,58 @@ function AddFilm(props) {
             return true
         }
     }
-    const handleClose =  () => {
-            if (imageUploadedRef.current.length > 0) {
-                for (let i = 0; i < imageUploadedRef.current.length; i++) {
-                    
-                        const uploadTask =  storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
-                        uploadTask.on(
-                            "state_changed",
-                            snapshot => { },
-                            err => {
-                                console.log(err)
-                            },
-                            () => {
-                                storage
-                                    .ref("images")
-                                    .child(imageUploadedRef.current[i].img.name)
-                                    .getDownloadURL()
-                                    .then(url => {
-                                        if (imageUploadedRef.current[i].name === 'image') {
-                                            setImg(url)
-                                        }
-                                        else setLargerImg(url)
-                                    })
-                                    .then(() => {
-                                        setTimeout(() => {
-                                            if (i === imageUploadedRef.current.length - 1) {
-                                                setIsUploadedImage(true)
-                                                imageUploadedRef.current = []
-                                                setImageUrl([])
-                                            }
-                                        }, 1000)
-                                    })
-                            }
-                        )
+    const handleClose = () => {
+        if (imageUploadedRef.current.length > 0) {
+            for (let i = 0; i < imageUploadedRef.current.length; i++) {
+
+                const uploadTask = storage.ref(`images/${imageUploadedRef.current[i].img.name}`).put(imageUploadedRef.current[i].img)
+                uploadTask.on(
+                    "state_changed",
+                    snapshot => { },
+                    err => {
+                        console.log(err)
+                    },
+                    () => {
+                        storage
+                            .ref("images")
+                            .child(imageUploadedRef.current[i].img.name)
+                            .getDownloadURL()
+                            .then(url => {
+                                if (imageUploadedRef.current[i].name === 'image') {
+                                    setImg(url)
+                                }
+                                else setLargerImg(url)
+                            })
+                            .then(() => {
+                                setTimeout(() => {
+                                    if (i === imageUploadedRef.current.length - 1) {
+                                        setIsUploadedImage(true)
+                                        imageUploadedRef.current = []
+                                        setImageUrl([])
+                                    }
+                                }, 1000)
+                            })
                     }
-                    
-                    
-                
-            }
-            else{
-                alert('you have to enter valid Values')
-                setEname('')
-                setName('')
-                setImg('')
-                setLargerImg('')
-                setUrl('')
-                setDescription('')
-                setStreamTapeId('')
-                setCategories(["default"])
-                setCountryId('')
-                setYear('default')
-                setActors(["default"])
-                setShow(false)
-                setIsUploadedImage(false)
+                )
             }
         }
+        else {
+            alert('you have to enter valid Values')
+            setEname('')
+            setName('')
+            setImg('')
+            setLargerImg('')
+            setUrl('')
+            setDescription('')
+            setStreamTapeId('')
+            setCategories(["default"])
+            setCountryId('')
+            setYear('default')
+            setActors(["default"])
+            setShow(false)
+            setIsUploadedImage(false)
+        }
+    }
 
 
     useEffect(() => {
@@ -180,7 +176,7 @@ function AddFilm(props) {
                 img: img,
                 largerImg: largerImg,
                 url: url,
-                streamTapeId:streamTapeId,
+                streamTapeId: streamTapeId,
                 description: description,
                 categories: categories,
                 actors: actors,
@@ -209,12 +205,13 @@ function AddFilm(props) {
         }
     }, [isUploadedImage])
     return (
+        console.log(categories),
         <div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Add New Category</Modal.Title>
+                    <Modal.Title>Add New Films</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{overflow:'hidden'}}>
+                <Modal.Body style={{ overflow: 'hidden' }}>
                     <Input
                         label="Name"
                         value={name}
@@ -299,7 +296,8 @@ function AddFilm(props) {
                                         onChange={(e) => {
                                             let newArr = categories
                                             newArr[index] = e.target.value
-                                            setCategories([...newArr])
+                                            const a = newArr.filter((value, index) => newArr.indexOf(value) === index)
+                                            setCategories([...a])
                                         }}
                                     >
                                         <option value="default">select category</option>
@@ -342,7 +340,8 @@ function AddFilm(props) {
                                         onChange={(e) => {
                                             let newArr = actors
                                             newArr[index] = e.target.value
-                                            setActors([...newArr])
+                                            const a = newArr.filter((value, index) => newArr.indexOf(value) === index)
+                                            setActors([...a])
                                         }}
                                     >
                                         <option value="default">select actor</option>

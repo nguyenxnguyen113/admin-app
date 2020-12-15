@@ -122,6 +122,7 @@ export const Actor = (props) => {
                 region: region,
                 age: age
             }
+            console.log(actor)
             if (!checkNull()) {
                 dispatch(addActor(actor));
                 alert('add successfull')

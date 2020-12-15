@@ -2,8 +2,9 @@ import { Layout } from "../../components/Layout";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getAllCategory, addCategory } from "../../actions";
+import { getAllCategory, addCategory, deleteCategoryById } from "../../actions";
 import { Input } from "../../components/UI/Input";
+import './style.css'
 
 export const Category = (props) => {
     const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ export const Category = (props) => {
         // const form = new FormData()
         const cat = {
             name: nameCategory
-        } 
+        }
         if (nameCategory === "") {
             alert('Category name is required');
             setShow(false);
@@ -40,7 +41,15 @@ export const Category = (props) => {
         for (let category of categories) {
             categoryList.push(
                 <li key={category.name}>
-                    {category.name}
+                    <div className="category">
+                        <h4 className="name-category">{category.name}</h4>
+                        <Button onClick={() => {
+                            const payload = {
+                                categoryId: category._id,
+                            };
+                            dispatch(deleteCategoryById(payload));
+                        }} size="sm">Remove</Button>
+                    </div>
                 </li>
             )
         }
@@ -52,7 +61,7 @@ export const Category = (props) => {
                 <Row>
                     <Col md={12}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <h3>Category</h3>
+                            <h3>Country list:</h3>
                             <button className="btn btn-primary" onClick={handleShow}>Add</button>
                         </div>
                     </Col>
@@ -65,13 +74,13 @@ export const Category = (props) => {
             </Container>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Add New Category</Modal.Title>
+                    <Modal.Title>Add New Country</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Input
-                       value={nameCategory}
-                       placeholder='Enter new category'
-                       onChange={(e) => {setNameCategory(e.target.value)}}
+                        value={nameCategory}
+                        placeholder='Enter new category'
+                        onChange={(e) => { setNameCategory(e.target.value) }}
                     />
                 </Modal.Body>
                 <Modal.Footer>
