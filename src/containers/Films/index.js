@@ -121,6 +121,7 @@ export const Film = (props) => {
                     <Col md={12}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                             <h3>Films</h3>
+                            <h4>Page of {pageNumber + 1}/{product.totalPages}</h4>
                             <button className="btn btn-primary" onClick={handleShow}>Add</button>
                         </div>
                     </Col>
