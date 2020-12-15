@@ -12,7 +12,7 @@ export const getFilmById = (id) => {
     dispatch({
       type: productConstants.GET_PRODUCT_BY_ID_REQUEST,
     })
-    const res = await axios.get(`/product/getProductById/${id}`)
+    const res = await axios.get(`/product/getProductById?id=${id}`)
     console.log(res)
     const { product } = res.data
     console.log(res.data)

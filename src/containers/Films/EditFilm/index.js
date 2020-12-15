@@ -234,7 +234,7 @@ function EditFilm(props) {
                         <div className='list added'>
                             <ul>
                             <h3>Category list added</h3>
-                            { showEdit ? data.nameCategories.map((value, index) => <li key={index}>{value}</li>)  : null}
+                            { showEdit ? data.categories.map((value, index) => <li key={index}>{value.name}</li>)  : null}
                             </ul>
                         </div>
                     </div>
@@ -251,7 +251,7 @@ function EditFilm(props) {
                             </option>
                         ))}
                     </select>
-                    {data.nameCountries}
+                    {/* {data.countries[0].name} */}
 
                     <div>
                         Select actor
@@ -289,7 +289,7 @@ function EditFilm(props) {
                     <div className='list-added'>
                         <ul>
                         <h4> Actor list added</h4>
-                        {showEdit ? data.nameActors.map((value, index) => <li key={index}>{value}</li>) : null}
+                        {showEdit ? data.actors.map((value, index) => <li key={index}>{value.name}</li>) : null}
                         </ul>
                     </div>
                 </Modal.Body>
