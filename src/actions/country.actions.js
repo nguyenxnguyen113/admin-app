@@ -24,6 +24,27 @@ export const getAllCountry = (pageNumber) => {
     }
 }
 
+export const getAmountCountry = () => {
+    return async (dispatch) => {
+        dispatch({
+            type: '123'
+        })
+        const res = await axios.get(`country/getAllCountry`)
+        console.log(res)
+        const { countries } = res.data
+        if (res.status === 200) {
+            dispatch({
+                type: '456',
+                payload: { amountCountry: countries}
+            })
+        } else {
+            dispatch({
+                type: '789',
+                payload: { error: res.data.error }
+            })
+        }
+    }
+}
 export const addCountry = (form) => {
     return async dispatch => {
         dispatch({ type: countryConstansts.ADD_NEW_COUNTRY_REQUEST });

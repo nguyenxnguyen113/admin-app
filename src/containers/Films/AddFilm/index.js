@@ -301,7 +301,7 @@ function AddFilm(props) {
                                         }}
                                     >
                                         <option value="default">select category</option>
-                                        {createCategoryList(category.categoryList).map((option) => (
+                                        {createCategoryList(category.categoryAmount).map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.name}
                                             </option>
@@ -321,7 +321,7 @@ function AddFilm(props) {
                         onChange={(e) => setCountryId(e.target.value)}
                     >
                         <option value="default">select country</option>
-                        {createCountryList(country.countryList).map((option) => (
+                        {createCountryList(country.amountCountry).map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.name}
                             </option>

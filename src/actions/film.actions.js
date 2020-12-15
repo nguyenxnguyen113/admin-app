@@ -53,6 +53,29 @@ export const getAllFilm = (pageNumber) => {
   }
 }
 
+export const getAmountOfFilm = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: productConstants.GET_AMOUNT_PRODUCTS_REQUEST,
+    })
+    const res = await axios.get(`/product/getAllProduct`)
+    console.log(res)
+    const { products } = res.data
+
+    if (res.status === 200) {
+      dispatch({
+        type: productConstants.GET_AMOUNT_PRODUCTS_SUCCESS,
+        payload: { productAmount: products }
+      })
+    } else {
+      dispatch({
+        type: productConstants.GET_AMOUNT_PRODUCTS_FAILURE,
+        payload: { error: res.data.error }
+      })
+    }
+  }
+}
+
 export const deleteProductById = (payload) => {
   return async (dispatch) => {
     try {

@@ -25,7 +25,29 @@ export const getAllCategory = (pageNumber) => {
         }
     }
 }
-
+export const getAmountCategory = (pageNumber) => {
+    return async (dispatch) => {
+        dispatch({
+            type: categoryConstansts.GET_AMOUNT_CATEGORIES_REQUEST,
+        })
+        const res = await axios.get(`category/getAllCategory`)
+        console.log(pageNumber)
+        console.log(res)
+        const { categories } = res.data
+        if (res.status === 200) {
+            
+            dispatch({
+                type: categoryConstansts.GET_AMOUNT_CATEGORIES_SUCCESS,
+                payload: { categoryAmount: categories }
+            })
+        } else {
+            dispatch({
+                type: categoryConstansts.GET_AMOUNT_CATEGORIES_FAILURE,
+                payload: { error: res.data.error }
+            })
+        }
+    }
+}
 export const addCategory = (form) => {
     return async dispatch => {
         dispatch({ type: categoryConstansts.ADD_NEW_CATEGORY_REQUEST });

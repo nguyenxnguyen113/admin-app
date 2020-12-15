@@ -5,7 +5,8 @@ const initState = {
     loading: false,
     error: null,
     totalPages: 0,
-    country: []
+    country: [],
+    amountCountry: []
 }
 
 const buildNewCategories = (parentId, categories, category) => {
@@ -30,6 +31,12 @@ export default (state = initState, action) => {
     console.log(action);
 
     switch (action.type) {
+        case '456':
+            state = {
+                ...state,
+                amountCountry: action.payload.amountCountry,
+            }
+            break;
         case countryConstansts.GET_ALL_COUNTRY_SUCCESS:
             state = {
                 ...state,

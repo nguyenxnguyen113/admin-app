@@ -3,7 +3,7 @@ import { Container, Row, Col, Modal, Button, Table, Image } from "react-bootstra
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import AddFilm from './AddFilm'
-import { getAllCategory, addFilm, getAllActor, getAllCountry, getAllFilm, deleteProductById, getFilmById } from "../../actions";
+import { getAllCategory, addFilm, getAllActor, getAllCountry, getAllFilm, deleteProductById, getFilmById, getAmountCategory, getAmountCountry } from "../../actions";
 import './style.css'
 import Select from 'react-select';
 import { useHistory } from "react-router-dom";
@@ -21,7 +21,7 @@ export const Film = (props) => {
     const product = useSelector((state) => state.product);
     console.log(product.product)
 
-    const data = category.categoryList
+    
     const dispatch = useDispatch();
     console.log(category)
     useEffect(() => {
@@ -30,6 +30,8 @@ export const Film = (props) => {
         dispatch(getAllActor())
         dispatch(getAllCountry())
         dispatch(getAllFilm(pageNumber))
+        dispatch(getAmountCategory())
+        dispatch(getAmountCountry())
         setNumberOfPages(product.totalPages)
 
     }, [pageNumber])
